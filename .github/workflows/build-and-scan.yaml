@@ -30,8 +30,7 @@ jobs:
           PRISMA_ACCESS_KEY: ${{ secrets.PRISMA_ACCESS_KEY }}
           PRISMA_SECRET_KEY: ${{ secrets.PRISMA_SECRET_KEY }}
           PRISMA_API_URL: hello
-        run: |
-          echo $PRISMA_ACCESS_KEY::$PRISMA_SECRET_KEY $PRISMA_API_URL
+        run: echo $PRISMA_ACCESS_KEY::$PRISMA_SECRET_KEY $PRISMA_API_URL >> "$GITHUB_OUTPUT"
           # pip install -U checkov
           # checkov -d ./ --bc-api-key "$PRISMA_ACCESS_KEY::$PRISMA_SECRET_KEY" --prisma-api-url "$PRISMA_API_URL" -s --repo-id neworg/codegoat --branch main
           # docker build -t vulnerable-image .
