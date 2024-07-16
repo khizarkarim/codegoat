@@ -5,12 +5,12 @@ on:
       - main
 jobs:
   build:
-    # env:
-    #   AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
-    #   AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
-    #   PRISMA_ACCESS_KEY: ${{secrets.PRISMA_ACCESS_KEY}}
-    #   PRISMA_SECRET_KEY: ${{secrets.PRISMA_SECRET_KEY}}
-    #   PRISMA_API_URL: ${{secrets.PRISMA_API_URL}}
+    env:
+      AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
+      AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+      PRISMA_ACCESS_KEY: ${{secrets.PRISMA_ACCESS_KEY}}
+      PRISMA_SECRET_KEY: ${{secrets.PRISMA_SECRET_KEY}}
+      PRISMA_API_URL: ${{secrets.PRISMA_API_URL}}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -23,20 +23,20 @@ jobs:
           python-version: 3.8
       - name: Build and scan image
         working-directory: ./sca-image
-        env:
-          AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
-          AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
-          PRISMA_ACCESS_KEY: ${{secrets.PRISMA_ACCESS_KEY}}
-          PRISMA_SECRET_KEY: ${{secrets.PRISMA_SECRET_KEY}}
-          PRISMA_API_URL: ${{secrets.PRISMA_API_URL}}
+        # env:
+        #   AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
+        #   AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+        #   PRISMA_ACCESS_KEY: ${{secrets.PRISMA_ACCESS_KEY}}
+        #   PRISMA_SECRET_KEY: ${{secrets.PRISMA_SECRET_KEY}}
+        #   PRISMA_API_URL: ${{secrets.PRISMA_API_URL}}
         run: |
           pip install -U checkov
-          checkov -d ./ --bc-api-key "$PRISMA_ACCESS_KEY::$PRISMA_SECRET_KEY" --prisma-api-url "$PRISMA_API_URL" -s
+          checkov -d ./ --bc-api-key "$PRISMA_ACCESS_KEY::$PRISMA_SECRET_KEY" --prisma-api-url "$PRISMA_API_URL" -s --repo-id neworg/codegoat --branch main
           docker build -t vulnerable-image .
       - name: Push to ECR
         working-directory: ./sca-image
         run: |
-          checkov --bc-api-key "${PRISMA_ACCESS_KEY}::${PRISMA_SECRET_KEY}" --prisma-api-url "${PRISMA_API_URL}" -s --image vulnerable-image --dockerfile-path ./Dockerfile
+          checkov --bc-api-key "${PRISMA_ACCESS_KEY}::${PRISMA_SECRET_KEY}" --prisma-api-url "${PRISMA_API_URL}" -s --image vulnerable-image --dockerfile-path ./Dockerfile --repo-id neworg/codegoat --branch main
           aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 440309162884.dkr.ecr.us-east-2.amazonaws.com
           docker tag vulnerable-image:latest 440309162884.dkr.ecr.us-east-2.amazonaws.com/vulnerable-image:latest
           docker push 440309162884.dkr.ecr.us-east-2.amazonaws.com/vulnerable-image:latest
