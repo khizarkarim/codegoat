@@ -4,7 +4,7 @@ FROM ubuntu:jammy-20221020
 ARG DEBIAN_FRONTEND=noninteractive
 
 # Update Ubuntu Software repository
-RUN apt update
+RUN apt-get update
 
 # Install nginx, php-fpm and supervisord from ubuntu repository
 RUN apt install -y nginx php-fpm supervisor && \
