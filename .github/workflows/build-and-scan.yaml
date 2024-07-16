@@ -25,7 +25,7 @@ jobs:
         working-directory: ./sca-image
         run: |
           pip install -U checkov
-          checkov -d ./ --bc-api-key "${PRISMA_ACCESS_KEY}::${PRISMA_SECRET_KEY}" --prisma-api-url "${PRISMA_API_URL}" -s
+          checkov -d ./ --bc-api-key "$PRISMA_ACCESS_KEY::$PRISMA_SECRET_KEY" --prisma-api-url "$PRISMA_API_URL" -s
           docker build -t vulnerable-image .
       - name: Push to ECR
         working-directory: ./sca-image
