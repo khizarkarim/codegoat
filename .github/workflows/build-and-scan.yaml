@@ -31,10 +31,9 @@ jobs:
         #   PRISMA_SECRET_KEY: ${{ secrets.PRISMA_SECRET_KEY }}
         #   PRISMA_API_URL: hello
         run: |
-          echo "$PRISMA_ACCESS_KEY::$PRISMA_SECRET_KEY $PRISMA_API_URL"
-          # pip install -U checkov
-          # checkov -d ./ --bc-api-key "$PRISMA_ACCESS_KEY::$PRISMA_SECRET_KEY" --prisma-api-url "$PRISMA_API_URL" -s --repo-id neworg/codegoat --branch main
-          # docker build -t vulnerable-image .
+          pip install -U checkov
+          checkov -d ./ --bc-api-key "$PRISMA_ACCESS_KEY::$PRISMA_SECRET_KEY" --prisma-api-url "$PRISMA_API_URL" -s --repo-id neworg/codegoat --branch main
+          docker build -t vulnerable-image .
       # - name: Push to ECR
       #   working-directory: ./sca-image
       #   run: |
