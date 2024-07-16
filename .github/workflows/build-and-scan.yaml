@@ -34,16 +34,16 @@ jobs:
           pip install -U checkov
           checkov -d ./ --bc-api-key "$PRISMA_ACCESS_KEY::$PRISMA_SECRET_KEY" --prisma-api-url "$PRISMA_API_URL" -s --repo-id neworg/codegoat --branch main
           docker build -t vulnerable-image .
-      # - name: Push to ECR
-      #   working-directory: ./sca-image
-      #   run: |
-      #     checkov --bc-api-key "${PRISMA_ACCESS_KEY}::${PRISMA_SECRET_KEY}" --prisma-api-url "${PRISMA_API_URL}" -s --image vulnerable-image --dockerfile-path ./Dockerfile --repo-id neworg/codegoat --branch main
-      #     aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 440309162884.dkr.ecr.us-east-2.amazonaws.com
-      #     docker tag vulnerable-image:latest 440309162884.dkr.ecr.us-east-2.amazonaws.com/vulnerable-image:latest
-      #     docker push 440309162884.dkr.ecr.us-east-2.amazonaws.com/vulnerable-image:latest
-      # - name: Web app vulnerabilities
-      #   working-directory: ./openapi
-      #   run: |
-      #     curl -k -u "${PRISMA_ACCESS_KEY}:${PRISMA_SECRET_KEY}" -L -o twistcli https://app0.cloud.twistlock.com/app0-93081922/api/v1/util/twistcli
-      #     chmod u+x twistcli
-      #     ./twistcli waas openapi-scan  --user ${PRISMA_ACCESS_KEY} --password ${PRISMA_SECRET_KEY} --address "https://app0.cloud.twistlock.com/app0-93081922" fail.yaml
+      - name: Push to ECR
+        working-directory: ./sca-image
+        run: |
+          checkov --bc-api-key "${PRISMA_ACCESS_KEY}::${PRISMA_SECRET_KEY}" --prisma-api-url "${PRISMA_API_URL}" -s --image vulnerable-image --dockerfile-path ./Dockerfile --repo-id neworg/codegoat --branch main
+          aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 440309162884.dkr.ecr.us-east-2.amazonaws.com
+          docker tag vulnerable-image:latest 440309162884.dkr.ecr.us-east-2.amazonaws.com/vulnerable-image:latest
+          docker push 440309162884.dkr.ecr.us-east-2.amazonaws.com/vulnerable-image:latest
+      - name: Web app vulnerabilities
+        working-directory: ./openapi
+        run: |
+          curl -k -u "${PRISMA_ACCESS_KEY}:${PRISMA_SECRET_KEY}" -L -o twistcli https://app0.cloud.twistlock.com/app0-93081922/api/v1/util/twistcli
+          chmod u+x twistcli
+          ./twistcli waas openapi-scan  --user ${PRISMA_ACCESS_KEY} --password ${PRISMA_SECRET_KEY} --address "https://app0.cloud.twistlock.com/app0-93081922" fail.yaml
