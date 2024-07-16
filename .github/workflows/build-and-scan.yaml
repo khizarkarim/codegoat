@@ -11,7 +11,7 @@ jobs:
       PRISMA_ACCESS_KEY: ${{ secrets.PRISMA_ACCESS_KEY }}
       PRISMA_SECRET_KEY: ${{ secrets.PRISMA_SECRET_KEY }}
       PRISMA_API_URL: ${{ secrets.PRISMA_API_URL }}
-    runs-on: [self-hosted, public, linux, x64]
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         name: Checkout repo
